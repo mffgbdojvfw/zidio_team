@@ -118,3 +118,27 @@ axios.get(`${API_BASE}/admin/users/stats`, {
 
 
 
+export const uploadProfileImage = (file, token) => {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  return axios.patch(`${API_BASE}/auth/update-profile-image`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+
+export const deleteProfileImage = (token) => {
+  return axios.delete(`${API_BASE}/auth/delete-profile`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+
+export const deleteUserFile = (id, token) =>
+  axios.delete(`${API_BASE}/uploads/history/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
