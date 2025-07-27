@@ -4,7 +4,7 @@ const path = require("path")
 const File = require("../models/File")
 const fs = require("fs")
 const upload = require('../middleware/uploadMiddleware');
-const { uploadExcel,getUserFiles,getParsedExcelData,getBase64FileById } = require('../controllers/uploadController');
+const { uploadExcel,getUserFiles,getParsedExcelData,getBase64FileById, deleteOwnFile } = require('../controllers/uploadController');
 const { verifyToken } = require('../middleware/authMiddleware');
 
 // KEY LINE: 'file' must match field name in Postman
@@ -41,6 +41,8 @@ router.get('/download/:id', verifyToken, async (req, res) => {
 
 
 router.get('/:id/base64', verifyToken, getBase64FileById);
+
+router.delete('/history/:id', verifyToken, deleteOwnFile);
 
 module.exports = router;
 

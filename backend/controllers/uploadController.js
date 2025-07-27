@@ -113,4 +113,29 @@ const getBase64FileById = async (req, res) => {
 };
 
 
-module.exports = { uploadExcel, getUserFiles, getParsedExcelData,getBase64FileById };
+const deleteOwnFile = async (req, res) => {
+  try {
+    console.log("USER in req:", req.user);           // ← should print { userId, role, … }
+    console.log("FILE id param:", req.params.id);
+
+    const file = await File.findById(req.params.id);
+    console.log("FILE found:", file);                // ← should print whole doc
+
+    if (!file) return res.status(404).json({ error: 'File not found' });
+
+    // safer compare
+    if (String(file.uploadedBy) !== String(req.user.userId)) {
+      return res.status(403).json({ error: 'You can only delete your own files.' });
+    }
+
+    await file.deleteOne();
+    return res.json({ message: 'File deleted successfully' });
+  } catch (err) {
+    console.error("DELETE crashed:", err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+module.exports = { uploadExcel, getUserFiles, getParsedExcelData,getBase64FileById , deleteOwnFile};
